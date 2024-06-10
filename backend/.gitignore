@@ -1,0 +1,49 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the go coverage tool
+*.cover
+
+# Output of the go profiler tool
+*.prof
+
+# Go workspace file
+go.work
+go.work.sum
+
+# Go module files
+go.sum
+
+# Directory for Go build outputs
+/bin/
+/dist/
+
+# Directory for Go test caches
+/testdata/
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE/editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.backup
+
+# macOS Finder directory
+.DS_Store
+
+# Windows Thumbs.db
+Thumbs.db
+
+# Logs
+*.log
