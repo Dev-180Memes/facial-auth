@@ -165,25 +165,6 @@
                           </v-col>
                         </v-row>
                         <v-btn color="blue" dark block tile @click="signup">Sign up</v-btn>
-
-                        <h5 class="text-center grey--text mt-4 mb-3">
-                          Or Sign up using
-                        </h5>
-                        <div
-                          class="d-flex justify-space-between align-center mx-10 mb-11"
-                        >
-                          <v-btn depressed outlined color="grey">
-                            <v-icon color="red">fab fa-google</v-icon>
-                          </v-btn>
-                          <v-btn depressed outlined color="grey">
-                            <v-icon color="blue">fab fa-facebook-f</v-icon>
-                          </v-btn>
-                          <v-btn depressed outlined color="grey">
-                            <v-icon color="light-blue lighten-3"
-                              >fab fa-twitter</v-icon
-                            >
-                          </v-btn>
-                        </div>
                       </v-col>
                     </v-row>
                   </v-card-text>
