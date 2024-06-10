@@ -17,6 +17,7 @@
                       <v-col cols="12" sm="8">
                         <v-text-field
                           label="Email"
+                          v-model="loginEmail"
                           outlined
                           dense
                           color="blue"
@@ -25,6 +26,7 @@
                         />
                         <v-text-field
                           label="Password"
+                          v-model="loginPassword"
                           outlined
                           dense
                           color="blue"
@@ -46,7 +48,7 @@
                             >
                           </v-col>
                         </v-row>
-                        <v-btn color="blue" dark block tile>Log in</v-btn>
+                        <v-btn color="blue" dark block tile @click="login">Log in</v-btn>
 
                         <h5 class="text-center grey--text mt-4 mb-3">
                           Or Log in using
@@ -109,6 +111,7 @@
                           <v-col cols="12" sm="6">
                             <v-text-field
                               label="First Name"
+                              v-model="signupFirstName"
                               outlined
                               dense
                               color="blue"
@@ -119,6 +122,7 @@
                           <v-col cols="12" sm="6">
                             <v-text-field
                               label="Last Name"
+                              v-model="signupLastName"
                               outlined
                               dense
                               color="blue"
@@ -129,6 +133,7 @@
                         </v-row>
                         <v-text-field
                           label="Email"
+                          v-model="signupEmail"
                           outlined
                           dense
                           color="blue"
@@ -136,6 +141,7 @@
                         />
                         <v-text-field
                           label="Password"
+                          v-model="signupPassword"
                           outlined
                           dense
                           color="blue"
@@ -146,6 +152,7 @@
                           <v-col cols="12" sm="7">
                             <v-checkbox
                               label="I Accept AAE"
+                              v-model="acceptTerms"
                               class="mt-n1"
                               color="blue"
                             >
@@ -157,7 +164,7 @@
                             >
                           </v-col>
                         </v-row>
-                        <v-btn color="blue" dark block tile>Sign up</v-btn>
+                        <v-btn color="blue" dark block tile @click="signup">Sign up</v-btn>
 
                         <h5 class="text-center grey--text mt-4 mb-3">
                           Or Sign up using
@@ -191,15 +198,49 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data: () => ({
     step: 1,
+    loginEmail: '',
+    loginPassword: '',
+    signupFirstName: '',
+    signupLastName: '',
+    signupEmail: '',
+    signupPassword: '',
+    acceptTerms: false,
   }),
-  props: {
-    source: String,
-  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('', {
+          email: this.loginEmail,
+          password: this.loginPassword,
+        });
+        console.log(response)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async signup() {
+      try {
+        const response = await axios.post('', {
+          firstName: this.signupFirstName,
+          lastName: this.signupLastName,
+          email: this.signupEmail,
+          password: this.signupPassword,
+        });
+        console.log(response)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 };
 </script>
+
 <style scoped>
 .v-application .rounded-bl-xl {
   border-bottom-left-radius: 300px !important;
