@@ -48,7 +48,9 @@
                             >
                           </v-col>
                         </v-row>
-                        <v-btn color="blue" dark block tile @click="login">Log in</v-btn>
+                        <v-btn color="blue" dark block tile @click="login"
+                          >Log in</v-btn
+                        >
 
                         <h5 class="text-center grey--text mt-4 mb-3">
                           Or Log in using
@@ -164,7 +166,9 @@
                             >
                           </v-col>
                         </v-row>
-                        <v-btn color="blue" dark block tile @click="signup">Sign up</v-btn>
+                        <v-btn color="blue" dark block tile @click="signup"
+                          >Sign up</v-btn
+                        >
                       </v-col>
                     </v-row>
                   </v-card-text>
@@ -179,7 +183,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '../axios';
 
 export default {
   data: () => ({
@@ -195,30 +199,56 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('', {
+        const response = await axios.post('/login', {
           email: this.loginEmail,
           password: this.loginPassword,
         });
-        console.log(response)
+        if (response.status === 200) {
+          const data = response.data;
+          this.$toast.success(data.message);
+          this.loginEmail = '';
+          this.loginPassword = '';
+          localStorage.setItem('token', data.token);
+          console.log(data.user);
+          localStorage.setItem(
+            'userFirstName',
+            JSON.stringify(data.user.first_name)
+          );
+          localStorage.setItem(
+            'userLastName',
+            JSON.stringify(data.user.last_name)
+          );
+          localStorage.setItem('userEmail', JSON.stringify(data.user.email));
+          this.$router.push('/dashboard');
+        }
       } catch (error) {
-        console.error(error)
+        this.$toast.error(error.response.data.message);
       }
     },
 
     async signup() {
+      if (!this.acceptTerms) return this.$toast.error('Please accept terms');
       try {
-        const response = await axios.post('', {
+        const response = await axios.post('/register', {
           firstName: this.signupFirstName,
           lastName: this.signupLastName,
           email: this.signupEmail,
           password: this.signupPassword,
         });
-        console.log(response)
+        if (response.status === 200) {
+          const data = response.data;
+          this.$toast.success(data.message);
+          this.signupFirstName = '';
+          this.signupLastName = '';
+          this.signupEmail = '';
+          this.signupPassword = '';
+          this.step = 1;
+        }
       } catch (error) {
-        console.log(error)
+        this.$toast.error(error.response.data.message);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

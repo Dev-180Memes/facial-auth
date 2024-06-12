@@ -19,9 +19,49 @@ func Register(c *fiber.Ctx) error {
 		return err
 	}
 
+	if data["firstName"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "First name is required",
+		})
+	}
+
+	if data["lastName"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Last name is required",
+		})
+	}
+
+	if data["email"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Email is required",
+		})
+	}
+
+	if data["password"] == "" {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Password is required",
+		})
+	}
+
+	// check if email already exists
+	var user models.User
+
+	database.DB.Where("email = ?", data["email"]).First(&user)
+
+	if user.Id != 0 {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Email already exists",
+		})
+	}
+
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
-	user := models.User{
+	user = models.User{
 		FirstName: data["firstName"],
 		LastName:  data["lastName"],
 		Email:     data["email"],
@@ -30,7 +70,9 @@ func Register(c *fiber.Ctx) error {
 
 	database.DB.Create(&user)
 
-	return c.JSON(user)
+	return c.JSON(fiber.Map{
+		"message": "Account created successfully",
+	})
 }
 
 func Login(c *fiber.Ctx) error {
@@ -83,30 +125,9 @@ func Login(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Success",
+		"token":   token,
+		"user":    user,
 	})
-}
-
-func User(c *fiber.Ctx) error {
-	cookie := c.Cookies("jwt")
-
-	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(SecretKey), nil
-	})
-
-	if err != nil {
-		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
-			"message": "Unauthorized",
-		})
-	}
-
-	claims := token.Claims.(*jwt.StandardClaims)
-
-	var user models.User
-
-	database.DB.Where("id = ?", claims.Issuer).First(&user)
-
-	return c.JSON(user)
 }
 
 func Logout(c *fiber.Ctx) error {
